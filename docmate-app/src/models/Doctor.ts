@@ -1,18 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, type InferSchemaType } from "mongoose";
 
-export interface IDoctor extends mongoose.Document {
-  name: string;
-  specialty: string;
-  city: string;
-  price: number;
-}
+const doctorSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    specialty: { type: String, required: true, index: true },
+    city: { type: String, required: true, index: true },
+    hospital: { type: String, required: true },
+    price: { type: Number, required: true },
+    rating: { type: Number, required: true, min: 0, max: 5 },
+    imageUrl: { type: String },
+    bio: { type: String },
+    workingHours: { type: String },
+    phone: { type: String },
+  },
+  { timestamps: true }
+);
 
-const DoctorSchema = new mongoose.Schema<IDoctor>({
-  name: { type: String, required: true },
-  specialty: { type: String, required: true },
-  city: { type: String, required: true },
-  price: { type: Number, required: true },
-});
+doctorSchema.index({ name: "text", specialty: "text" });
 
-// We check if the model is already compiled to prevent rewriting it during hot-reloads in Next.js
-export default mongoose.models.Doctor || mongoose.model<IDoctor>('Doctor', DoctorSchema);
+export type IDoctor = InferSchemaType<typeof doctorSchema> & { _id: mongoose.Types.ObjectId };
+
+export const Doctor =
+  mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);

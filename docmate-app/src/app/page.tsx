@@ -2,26 +2,60 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-20 px-16 bg-white shadow-xl rounded-2xl sm:items-start text-center sm:text-left">
-        <div className="flex flex-col gap-6 w-full">
-          <h1 className="text-5xl font-extrabold text-blue-700 tracking-tight">
-            DocMate
-          </h1>
-          <p className="text-xl text-zinc-600 font-medium">
-            Find the perfect doctor for you. Book appointments easily.
-          </p>
-          
-          <div className="mt-8">
-            <Link 
-              href="/doctors" 
-              className="inline-flex h-14 items-center justify-center rounded-full bg-blue-600 px-8 font-semibold text-white transition-colors hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transform duration-200"
-            >
-              Search Doctors Now ✨
-            </Link>
-          </div>
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
+      <div className="max-w-2xl text-center">
+        <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+          Намерете <span className="text-primary">лекар</span> за вас
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-muted">
+          Търсете специалисти по специалност, град и болница. Вижте свободни
+          часове и запишете час за преглед бързо и лесно.
+        </p>
+        <div className="mt-10 flex items-center justify-center gap-x-4">
+          <Link
+            href="/doctors"
+            className="rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-dark transition-colors"
+          >
+            Разгледай лекарите →
+          </Link>
         </div>
-      </main>
+      </div>
+
+      <div className="mt-20 grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-2xl">
+            🔍
+          </div>
+          <h3 className="mt-4 text-base font-semibold text-foreground">
+            Търсене
+          </h3>
+          <p className="mt-2 text-sm text-muted">
+            Филтрирайте по специалност, град, цена и рейтинг.
+          </p>
+        </div>
+        <div className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-2xl">
+            📋
+          </div>
+          <h3 className="mt-4 text-base font-semibold text-foreground">
+            Профили
+          </h3>
+          <p className="mt-2 text-sm text-muted">
+            Вижте подробна информация за всеки лекар.
+          </p>
+        </div>
+        <div className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-2xl">
+            📅
+          </div>
+          <h3 className="mt-4 text-base font-semibold text-foreground">
+            Свободни часове
+          </h3>
+          <p className="mt-2 text-sm text-muted">
+            Проверете наличността и запишете час веднага.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
