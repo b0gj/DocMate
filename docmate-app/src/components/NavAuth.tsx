@@ -14,13 +14,21 @@ export function NavAuth() {
 
   if (user) {
     return (
-      <Link
-        href="/profile"
-        className="flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary-light transition-colors"
-      >
-        <span>{user.role === "doctor" ? "👨‍⚕️" : "👤"}</span>
-        <span className="hidden sm:inline">{user.name.split(" ")[0]}</span>
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link
+          href={user.role === "doctor" ? "/dashboard" : "/bookings"}
+          className="text-sm font-medium text-muted hover:text-primary transition-colors"
+        >
+          {user.role === "doctor" ? "Табло" : "Резервации"}
+        </Link>
+        <Link
+          href="/profile"
+          className="flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary-light transition-colors"
+        >
+          <span>{user.role === "doctor" ? "👨‍⚕️" : "👤"}</span>
+          <span className="hidden sm:inline">{user.name.split(" ")[0]}</span>
+        </Link>
+      </div>
     );
   }
 

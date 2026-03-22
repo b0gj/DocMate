@@ -11,6 +11,10 @@ const slotSchema = new Schema(
     dateTime: { type: Date, required: true },
     durationMinutes: { type: Number, default: 30 },
     isBooked: { type: Boolean, default: false },
+    bookedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

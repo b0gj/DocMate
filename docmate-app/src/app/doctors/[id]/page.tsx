@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SlotBooking } from "@/components/SlotBooking";
 
 interface DoctorProfileProps {
   params: Promise<{ id: string }>;
@@ -23,18 +24,6 @@ export default async function DoctorProfile({ params }: DoctorProfileProps) {
   if (!data) notFound();
 
   const { doctor, slots } = data;
-
-  // Group slots by date
-  const slotsByDate = new Map<string, typeof slots>();
-  for (const slot of slots) {
-    const date = new Date(slot.dateTime).toLocaleDateString("bg-BG", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-    });
-    if (!slotsByDate.has(date)) slotsByDate.set(date, []);
-    slotsByDate.get(date)!.push(slot);
-  }
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
@@ -106,42 +95,7 @@ export default async function DoctorProfile({ params }: DoctorProfileProps) {
         )}
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-bold text-foreground">
-          Свободни часове
-        </h2>
-
-        {slots.length === 0 ? (
-          <p className="mt-4 text-sm text-muted">
-            Няма свободни часове в момента.
-          </p>
-        ) : (
-          <div className="mt-4 space-y-6">
-            {Array.from(slotsByDate.entries()).map(([date, dateSlots]) => (
-              <div key={date}>
-                <h3 className="text-sm font-semibold text-foreground capitalize">
-                  {date}
-                </h3>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {dateSlots.map(
-                    (slot: { _id: string; dateTime: string }) => (
-                      <span
-                        key={slot._id}
-                        className="rounded-lg border border-primary/30 bg-accent px-3 py-1.5 text-sm font-medium text-primary cursor-default hover:bg-primary hover:text-white transition-colors"
-                      >
-                        {new Date(slot.dateTime).toLocaleTimeString("bg-BG", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    )
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <SlotBooking slots={slots} doctorName={doctor.name} />
     </div>
   );
 }
