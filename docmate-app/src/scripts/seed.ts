@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import { Doctor } from "../models/Doctor";
 import { Slot } from "../models/Slot";
+import { User } from "../models/User";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/docmate";
 
@@ -166,12 +168,32 @@ function generateSlots(doctorId: mongoose.Types.ObjectId) {
   return slots;
 }
 
+const sampleUsers = [
+  {
+    email: "patient@docmate.bg",
+    password: "patient123",
+    name: "Мария Петрова",
+    role: "patient" as const,
+    phone: "+359 888 111 222",
+    city: "София",
+  },
+  {
+    email: "patient2@docmate.bg",
+    password: "patient123",
+    name: "Георги Николов",
+    role: "patient" as const,
+    phone: "+359 888 333 444",
+    city: "Пловдив",
+  },
+];
+
 async function seed() {
   await mongoose.connect(MONGODB_URI);
   console.log("Connected to MongoDB");
 
   await Doctor.deleteMany({});
   await Slot.deleteMany({});
+  await User.deleteMany({});
   console.log("Cleared existing data");
 
   const createdDoctors = await Doctor.insertMany(doctors);
@@ -186,6 +208,29 @@ async function seed() {
     }
   }
   console.log(`Inserted ${totalSlots} slots`);
+
+  // Create sample patient users
+  const hashedPassword = await bcrypt.hash("patient123", 12);
+  for (const u of sampleUsers) {
+    await User.create({ ...u, password: hashedPassword });
+  }
+  console.log(`Inserted ${sampleUsers.length} patient users`);
+
+  // Create doctor users linked to first 3 doctor profiles
+  const doctorPassword = await bcrypt.hash("doctor123", 12);
+  for (let i = 0; i < 3; i++) {
+    const doc = createdDoctors[i];
+    await User.create({
+      email: `doctor${i + 1}@docmate.bg`,
+      password: doctorPassword,
+      name: doc.name,
+      role: "doctor",
+      phone: doc.phone,
+      city: doc.city,
+      doctorProfile: doc._id,
+    });
+  }
+  console.log("Inserted 3 doctor users");
 
   await mongoose.disconnect();
   console.log("Done!");
